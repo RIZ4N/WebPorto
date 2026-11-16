@@ -28,6 +28,10 @@ Open http://localhost:3000.
    ```
 
 4. Sign in at http://localhost:3000/admin.
+5. Optional, once: paste `supabase/migrate-old-reports.sql` into **SQL Editor**
+   and run it to fill the 11 reports from the old site with their chapters.
+   Their pictures are already in `public/images/legacy`. Don't run it again
+   after editing those reports in the admin panel; it would replace your edits.
 
 Only accounts listed in `admins` can change anything; visitors can only read
 published reports.

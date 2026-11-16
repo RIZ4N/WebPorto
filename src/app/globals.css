@@ -266,3 +266,32 @@ body {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* Tables inside a report chapter. */
+.report-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+.report-body th,
+.report-body td {
+  border: 1px solid var(--line);
+  padding: 0.6em 0.8em;
+  text-align: left;
+  vertical-align: top;
+}
+.report-body th {
+  background: var(--accent-tint);
+  font-weight: 650;
+}
+.report-body td > * + *,
+.report-body th > * + * {
+  margin-top: 0.5em;
+}
+.report-body .tableWrapper {
+  overflow-x: auto;
+}
+.tiptap .selectedCell {
+  background: var(--accent-tint);
+}

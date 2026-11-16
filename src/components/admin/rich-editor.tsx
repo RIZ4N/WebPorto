@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "@tiptap/extension-image";
+import { TableKit } from "@tiptap/extension-table";
+import TextAlign from "@tiptap/extension-text-align";
 import { Placeholder } from "@tiptap/extensions/placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -46,7 +48,7 @@ function ToolButton({
   );
 }
 
-/** Rich text box for one chapter: headings, lists, code, links and pictures. */
+/** Rich text box for one chapter: headings, lists, code, links, pictures and tables. */
 export function RichEditor({ initialContent, onChange, onUpload }: Props) {
   const fileInput = useRef<HTMLInputElement>(null);
   const [linkValue, setLinkValue] = useState<string | null>(null);
@@ -60,6 +62,8 @@ export function RichEditor({ initialContent, onChange, onUpload }: Props) {
         link: { openOnClick: false, autolink: true },
       }),
       Image,
+      TableKit.configure({ table: { resizable: false } }),
+      TextAlign.configure({ types: ["paragraph", "heading"], alignments: ["left", "center"] }),
       Placeholder.configure({ placeholder: "Write this chapter here" }),
     ],
     content: initialContent,
@@ -189,6 +193,17 @@ export function RichEditor({ initialContent, onChange, onUpload }: Props) {
         >
           Code
         </ToolButton>
+        <ToolButton
+          label="Centre text (for captions)"
+          active={editor.isActive({ textAlign: "center" })}
+          onClick={() =>
+            editor.isActive({ textAlign: "center" })
+              ? editor.chain().focus().unsetTextAlign().run()
+              : editor.chain().focus().setTextAlign("center").run()
+          }
+        >
+          Centre
+        </ToolButton>
         <span aria-hidden="true" className="mx-1 h-6 w-px bg-line" />
         <ToolButton
           label="Link"
@@ -207,6 +222,15 @@ export function RichEditor({ initialContent, onChange, onUpload }: Props) {
           onClick={() => fileInput.current?.click()}
         >
           {uploading ? "Uploading" : "Picture"}
+        </ToolButton>
+        <ToolButton
+          label="Insert table"
+          disabled={editor.isActive("table")}
+          onClick={() =>
+            editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+          }
+        >
+          Table
         </ToolButton>
         <span aria-hidden="true" className="mx-1 h-6 w-px bg-line" />
         <ToolButton
@@ -232,6 +256,31 @@ export function RichEditor({ initialContent, onChange, onUpload }: Props) {
           onChange={(event) => addPicture(event.target.files?.[0])}
         />
       </div>
+
+      {editor.isActive("table") && (
+        <div
+          role="toolbar"
+          aria-label="Table"
+          className="flex flex-wrap items-center gap-1 border-b border-line p-2"
+        >
+          <span className="px-2 font-mono text-xs text-muted">Table</span>
+          <ToolButton label="Add row below" onClick={() => editor.chain().focus().addRowAfter().run()}>
+            + Row
+          </ToolButton>
+          <ToolButton label="Add column to the right" onClick={() => editor.chain().focus().addColumnAfter().run()}>
+            + Column
+          </ToolButton>
+          <ToolButton label="Remove this row" onClick={() => editor.chain().focus().deleteRow().run()}>
+            − Row
+          </ToolButton>
+          <ToolButton label="Remove this column" onClick={() => editor.chain().focus().deleteColumn().run()}>
+            − Column
+          </ToolButton>
+          <ToolButton label="Remove the table" onClick={() => editor.chain().focus().deleteTable().run()}>
+            Remove table
+          </ToolButton>
+        </div>
+      )}
 
       {linkValue !== null && (
         <div className="flex flex-wrap items-center gap-2 border-b border-line p-2">
