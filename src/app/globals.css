@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root,
+[data-theme="light"] {
+  --ground: #faf8f3;
+  --surface: #f2eee4;
+  --ink: #1c2421;
+  --muted: #5c6661;
+  --line: #e4dfd3;
+  --accent: #2f6f68;
+  --accent-tint: #e3eeeb;
+  --on-accent: #ffffff;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --ground: #121816;
+  --surface: #1a2220;
+  --ink: #ece9e1;
+  --muted: #a3ada8;
+  --line: #2a3431;
+  --accent: #7fc4ba;
+  --accent-tint: #1f302d;
+  --on-accent: #0f1513;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-tint: var(--accent-tint);
+  --color-on-accent: var(--on-accent);
+  --font-serif: "Newsreader Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Theme toggle shows the icon for the theme you would switch to. */
+.icon-sun {
+  display: none;
+}
+[data-theme="dark"] .icon-sun {
+  display: block;
+}
+[data-theme="dark"] .icon-moon {
+  display: none;
+}
+
+/* One entrance sequence for the hero; everything else stays still. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
