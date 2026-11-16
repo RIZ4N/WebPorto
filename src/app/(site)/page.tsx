@@ -3,25 +3,9 @@ import Link from "next/link";
 import { ReportRow } from "@/components/report-row";
 import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/components/section-heading";
-import {
-  courses,
-  education,
-  experience,
-  projects,
-  reports,
-  stack,
-} from "@/lib/content";
-import profile from "../../public/images/profile.jpg";
-import resepku from "../../public/images/reports/resepku-grid.jpg";
-
-const featured = reports[0];
-const moreReports = [reports[1], reports[2], reports[7], reports[8]];
-
-const numbers = [
-  { value: String(reports.length), label: "lab reports" },
-  { value: String(courses.length), label: "courses" },
-  { value: "2024", label: "class of" },
-];
+import { education, experience, projects, stack } from "@/lib/content";
+import { getReports, groupByCourse } from "@/lib/data";
+import profile from "../../../public/images/profile.jpg";
 
 function Arrow() {
   return (
@@ -45,7 +29,16 @@ function step(i: number) {
   return { "--i": i } as React.CSSProperties;
 }
 
-export default function Home() {
+export default async function Home() {
+  const reports = await getReports();
+  const [featured, ...rest] = reports;
+  const moreReports = rest.slice(0, 4);
+  const numbers = [
+    { value: String(reports.length), label: "lab reports" },
+    { value: String(groupByCourse(reports).length), label: "courses" },
+    { value: "2024", label: "class of" },
+  ];
+
   return (
     <>
       <section className="mx-auto flex max-w-[1240px] flex-col gap-8 px-5 pt-12 pb-14 sm:px-8 md:gap-10 md:pt-16 md:pb-20">
@@ -125,50 +118,57 @@ export default function Home() {
       </div>
 
       <section className="px-3 pt-16 sm:px-6 md:pt-24">
-        <Reveal>
-          <div className="mx-auto flex max-w-[1240px] flex-col gap-10 overflow-hidden rounded-3xl bg-panel p-6 text-on-panel sm:p-12">
-            <SectionHeading
-              tone="panel"
-              number="01"
-              title="Latest report"
-              description="The newest write-up from the lab, with a few earlier ones underneath."
-            />
-            <div className="flex flex-wrap items-center gap-x-16 gap-y-12">
-              <div className="flex min-w-0 flex-1 basis-[420px] flex-col items-start gap-6">
-                <p className="font-mono text-[13px] text-panel-accent uppercase">
-                  {featured.course} · {featured.label}
-                </p>
-                <h3 className="display text-[clamp(2.25rem,4.6vw,4rem)]">
-                  {featured.title}
-                </h3>
-                <p className="max-w-[440px] font-mono text-sm leading-relaxed text-panel-muted">
-                  ResepKu, my recipe app in Flutter, gets list and grid views,
-                  recipe photos, and bundled assets.
-                </p>
-                <a
-                  href={featured.href}
-                  className="flex min-h-14 items-center gap-3 rounded-2xl bg-panel-accent px-6 font-mono text-[15px] font-medium text-panel transition-transform hover:-translate-y-0.5"
-                >
-                  Read the report
-                  <Arrow />
-                </a>
-              </div>
-              <div className="min-w-0 flex-1 basis-[420px] px-2 pb-2">
-                <Image
-                  src={resepku}
-                  alt="ResepKu app showing recipes in a two-column grid"
-                  placeholder="blur"
-                  sizes="(min-width: 1024px) 540px, 90vw"
-                  className="w-full rotate-2 rounded-2xl border border-panel-line transition-transform duration-500 hover:rotate-0"
-                />
+        {featured && (
+          <Reveal>
+            <div className="mx-auto flex max-w-[1240px] flex-col gap-10 overflow-hidden rounded-3xl bg-panel p-6 text-on-panel sm:p-12">
+              <SectionHeading
+                tone="panel"
+                number="01"
+                title="Latest report"
+                description="The newest write-up from the lab, with a few earlier ones underneath."
+              />
+              <div className="flex flex-wrap items-center gap-x-16 gap-y-12">
+                <div className="flex min-w-0 flex-1 basis-[420px] flex-col items-start gap-6">
+                  <p className="font-mono text-[13px] text-panel-accent uppercase">
+                    {featured.course} · {featured.label}
+                  </p>
+                  <h3 className="display text-[clamp(2.25rem,4.6vw,4rem)]">
+                    {featured.title}
+                  </h3>
+                  {featured.summary && (
+                    <p className="max-w-[440px] font-mono text-sm leading-relaxed text-panel-muted">
+                      {featured.summary}
+                    </p>
+                  )}
+                  <a
+                    href={featured.href}
+                    className="flex min-h-14 items-center gap-3 rounded-2xl bg-panel-accent px-6 font-mono text-[15px] font-medium text-panel transition-transform hover:-translate-y-0.5"
+                  >
+                    Read the report
+                    <Arrow />
+                  </a>
+                </div>
+                {featured.coverUrl && (
+                  <div className="min-w-0 flex-1 basis-[420px] px-2 pb-2">
+                    <div className="relative aspect-[5/4] rotate-2 overflow-hidden rounded-2xl border border-panel-line transition-transform duration-500 hover:rotate-0">
+                      <Image
+                        src={featured.coverUrl}
+                        alt={`Preview of ${featured.title}`}
+                        fill
+                        sizes="(min-width: 1024px) 540px, 90vw"
+                        className="object-cover object-top"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        )}
 
         <Reveal className="mx-auto flex max-w-[1240px] flex-col gap-3 pt-6">
           {moreReports.map((report) => (
-            <ReportRow key={report.href} report={report} />
+            <ReportRow key={report.id} report={report} />
           ))}
           <Link
             href="/reports"

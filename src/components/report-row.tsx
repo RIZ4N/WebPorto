@@ -1,11 +1,12 @@
-import type { Report } from "@/lib/content";
+import Link from "next/link";
+import type { ReportSummary } from "@/lib/data";
 
-export function ReportRow({ report }: { report: Report }) {
-  return (
-    <a
-      href={report.href}
-      className="group flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl border border-line bg-card px-5 py-4 text-ink transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-accent sm:px-6"
-    >
+const rowClass =
+  "group flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl border border-line bg-card px-5 py-4 text-ink transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-accent sm:px-6";
+
+export function ReportRow({ report }: { report: ReportSummary }) {
+  const content = (
+    <>
       <span className="w-full font-mono text-xs text-muted uppercase sm:w-28">
         {report.label}
       </span>
@@ -32,6 +33,17 @@ export function ReportRow({ report }: { report: Report }) {
           <path d="M7 17L17 7M8 7h9v9" />
         </svg>
       </span>
+    </>
+  );
+
+  // Reports not migrated yet still open their page on the old site.
+  return report.external ? (
+    <a href={report.href} className={rowClass}>
+      {content}
     </a>
+  ) : (
+    <Link href={report.href} className={rowClass}>
+      {content}
+    </Link>
   );
 }

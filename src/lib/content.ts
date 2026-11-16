@@ -1,90 +1,52 @@
-// Temporary site content, taken from the previous portfolio site.
-// It moves to the Supabase database once the admin panel exists.
+// Site content that is not in the database yet (projects, about), plus the
+// report list used as a fallback when Supabase can't be reached.
 
-export type Course = "Mobile App" | "Web Programming";
-
-export type Report = {
-  course: Course;
-  /** Short label shown beside the title, e.g. "Practicum 07". */
-  label: string;
-  title: string;
-  /** Points at the previous site until report pages are migrated. */
-  href: string;
-};
+import type { ReportSummary } from "./data";
 
 const oldSite = "https://zann.ifportofolio.com";
 
-/** Newest first within each course. */
-export const reports: Report[] = [
-  {
-    course: "Mobile App",
-    label: "Practicum 07",
-    title: "List, Grid, Images, and Assets in ResepKu",
-    href: `${oldSite}/laprak_MobApp-7.html`,
-  },
-  {
-    course: "Mobile App",
-    label: "Practicum 06",
-    title: "State Management in ResepKu",
-    href: `${oldSite}/laprak_MobApp-6.html`,
-  },
-  {
-    course: "Mobile App",
-    label: "Practicum 05",
-    title: "Navigation Architecture and Expense Tracker with Local Storage",
-    href: `${oldSite}/laprak_MobApp-5.html`,
-  },
-  {
-    course: "Mobile App",
-    label: "Practicum 04",
-    title: "Navigation and Passing Data",
-    href: `${oldSite}/laprak_MobApp-4.html`,
-  },
-  {
-    course: "Mobile App",
-    label: "Practicum 03",
-    title: "Input Widgets and Forms: Capturing Data, Dropdowns, and Validation",
-    href: `${oldSite}/laprak_MobApp-3.html`,
-  },
-  {
-    course: "Mobile App",
-    label: "Practicum 02",
-    title: "Widgets, Layouting, and Styling",
-    href: `${oldSite}/laprak_MobApp-2.html`,
-  },
-  {
-    course: "Mobile App",
-    label: "Practicum 01",
-    title: "Input Widgets and Basic Form in Flutter",
-    href: `${oldSite}/laprak_MobApp-1.html`,
-  },
-  {
-    course: "Web Programming",
-    label: "Laravel",
-    title: "Laravel SISFO: CRUD and Role-Based Access Control",
-    href: `${oldSite}/laporan9.html`,
-  },
-  {
-    course: "Web Programming",
-    label: "Laravel",
-    title: "Laravel CRUD: Student, Major, and Subject Relationships",
-    href: `${oldSite}/laporan8-2.html`,
-  },
-  {
-    course: "Web Programming",
-    label: "Laravel",
-    title: "Laravel MVC: Migration, Seeding, Routing, Model, Controller, and View",
-    href: `${oldSite}/laporan8.html`,
-  },
-  {
-    course: "Web Programming",
-    label: "Web basics",
-    title: "UI Implementation and Simple CRUD",
-    href: `${oldSite}/laporan.html`,
-  },
-];
+function legacy(
+  course: string,
+  courseOrder: number,
+  number: number,
+  label: string,
+  title: string,
+  page: string,
+): ReportSummary {
+  return {
+    id: page,
+    slug: page.replace(".html", ""),
+    title,
+    label,
+    summary: "",
+    course,
+    courseOrder,
+    number,
+    coverUrl: null,
+    href: `${oldSite}/${page}`,
+    external: true,
+  };
+}
 
-export const courses: Course[] = ["Mobile App", "Web Programming"];
+/** Newest first. */
+export const fallbackReports: ReportSummary[] = [
+  {
+    ...legacy("Mobile App", 1, 7, "Practicum 07", "List, Grid, Images, and Assets in ResepKu", "laprak_MobApp-7.html"),
+    summary:
+      "ResepKu, my recipe app in Flutter, gets list and grid views, recipe photos, and bundled assets.",
+    coverUrl: "/images/reports/resepku-grid.jpg",
+  },
+  legacy("Mobile App", 1, 6, "Practicum 06", "State Management in ResepKu", "laprak_MobApp-6.html"),
+  legacy("Mobile App", 1, 5, "Practicum 05", "Navigation Architecture and Expense Tracker with Local Storage", "laprak_MobApp-5.html"),
+  legacy("Web Programming", 2, 4, "Laravel", "Laravel SISFO: CRUD and Role-Based Access Control", "laporan9.html"),
+  legacy("Web Programming", 2, 3, "Laravel", "Laravel CRUD: Student, Major, and Subject Relationships", "laporan8-2.html"),
+  legacy("Mobile App", 1, 4, "Practicum 04", "Navigation and Passing Data", "laprak_MobApp-4.html"),
+  legacy("Mobile App", 1, 3, "Practicum 03", "Input Widgets and Forms: Capturing Data, Dropdowns, and Validation", "laprak_MobApp-3.html"),
+  legacy("Mobile App", 1, 2, "Practicum 02", "Widgets, Layouting, and Styling", "laprak_MobApp-2.html"),
+  legacy("Mobile App", 1, 1, "Practicum 01", "Input Widgets and Basic Form in Flutter", "laprak_MobApp-1.html"),
+  legacy("Web Programming", 2, 2, "Laravel", "Laravel MVC: Migration, Seeding, Routing, Model, Controller, and View", "laporan8.html"),
+  legacy("Web Programming", 2, 1, "Web basics", "UI Implementation and Simple CRUD", "laporan.html"),
+];
 
 export type Project = {
   title: string;
