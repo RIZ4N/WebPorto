@@ -87,12 +87,24 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
             </span>
             <span className="font-mono text-[13px]">Admin</span>
           </Link>
-          <nav aria-label="Admin" className="flex items-center gap-x-5">
+          <nav aria-label="Admin" className="flex flex-wrap items-center gap-x-5">
             <Link
               href="/admin"
               className="flex min-h-11 items-center font-mono text-[13px] hover:text-accent"
             >
               Reports
+            </Link>
+            <Link
+              href="/admin/gallery"
+              className="flex min-h-11 items-center font-mono text-[13px] hover:text-accent"
+            >
+              Gallery
+            </Link>
+            <Link
+              href="/admin/messages"
+              className="flex min-h-11 items-center font-mono text-[13px] hover:text-accent"
+            >
+              Messages
             </Link>
             <Link
               href="/"

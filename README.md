@@ -33,13 +33,29 @@ Open http://localhost:3000.
    Their pictures are already in `public/images/legacy`. Don't run it again
    after editing those reports in the admin panel; it would replace your edits.
 
+6. Once: paste `supabase/add-gallery-and-messages.sql` into **SQL Editor** and
+   run it. It adds the gallery and the contact-form inbox.
+
 Only accounts listed in `admins` can change anything; visitors can only read
 published reports.
+
+## Deploy on Hostinger
+
+The site needs Hostinger's **Node.js web app** hosting (Business or Cloud
+plans); ordinary file-upload hosting can't run it.
+
+1. hPanel > **Websites** > **Add Website** > **Node.js web app** > import
+   this GitHub repository, branch `main`.
+2. Application type `next`, build script `build`, output directory `.next`,
+   Node.js 20 or newer.
+3. Add two environment variables before the first build:
+   `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+4. Deploy, then attach the domain to the app.
 
 ## Structure
 
 - `src/app/(site)` – public pages (`/`, `/reports`, `/reports/[slug]`)
-- `src/app/admin` – admin panel (`/admin/login`, `/admin`, `/admin/editor`)
+- `src/app/admin` – admin panel (reports, editor, gallery, messages)
 - `src/components` – shared pieces; `components/admin` holds the editor
 - `src/lib/data.ts` – reads published reports from Supabase
 - `src/lib/content.ts` – projects and about text, plus a fallback report list

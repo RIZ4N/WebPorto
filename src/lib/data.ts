@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { cacheLife, cacheTag } from "next/cache";
-import { fallbackReports } from "./content";
+import { fallbackGallery, fallbackReports } from "./content";
 
 export type ReportSummary = {
   id: string;
@@ -18,6 +18,8 @@ export type ReportSummary = {
   href: string;
   external: boolean;
 };
+
+export type GalleryPhoto = { id: string; imageUrl: string; caption: string };
 
 export type ReportSection = { id: string; title: string; content: string };
 
@@ -135,6 +137,37 @@ async function loadReport(slug: string): Promise<Loaded<ReportDetail | null>> {
   } catch {
     return { ok: false };
   }
+}
+
+async function loadGallery(): Promise<Loaded<GalleryPhoto[]>> {
+  "use cache";
+  cacheTag("gallery");
+  cacheLife("minutes");
+
+  try {
+    const { data, error } = await publicClient()
+      .from("gallery_photos")
+      .select("id, image_url, caption")
+      .order("position")
+      .order("created_at");
+    if (error) return { ok: false };
+    return {
+      ok: true,
+      value: data.map((row) => ({
+        id: row.id as string,
+        imageUrl: row.image_url as string,
+        caption: row.caption as string,
+      })),
+    };
+  } catch {
+    return { ok: false };
+  }
+}
+
+/** Gallery photos in display order. Falls back to the built-in three if the database can't be reached. */
+export async function getGallery(): Promise<GalleryPhoto[]> {
+  const result = await loadGallery();
+  return result.ok ? result.value : fallbackGallery;
 }
 
 /** Published reports, newest first. Falls back to the built-in list if the database can't be reached. */

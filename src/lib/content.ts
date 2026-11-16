@@ -1,7 +1,7 @@
 // Site content that is not in the database yet (projects, about), plus the
 // report list used as a fallback when Supabase can't be reached.
 
-import type { ReportSummary } from "./data";
+import type { GalleryPhoto, ReportSummary } from "./data";
 
 const oldSite = "https://zann.ifportofolio.com";
 
@@ -105,4 +105,19 @@ export const experience = [
     detail: "Equipment Staff",
     period: "May 2025",
   },
+];
+
+export const contact = {
+  email: "rizanoesvan@gmail.com",
+  // TODO(Rizan): replace with your LinkedIn profile address.
+  linkedin: "https://www.linkedin.com/",
+  github: "https://github.com/RIZ4N",
+  instagram: "https://www.instagram.com/rizanoesvan/",
+};
+
+/** Shown when the gallery can't be read from the database. */
+export const fallbackGallery: GalleryPhoto[] = [
+  { id: "photo-1", imageUrl: "/images/gallery/photo-1.webp", caption: "Terraced rice fields" },
+  { id: "photo-2", imageUrl: "/images/gallery/photo-2.webp", caption: "Castle on a forested hill" },
+  { id: "photo-3", imageUrl: "/images/gallery/photo-3.webp", caption: "Laptop with code on a desk" },
 ];

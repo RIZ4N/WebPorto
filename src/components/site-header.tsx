@@ -3,9 +3,10 @@ import { ThemeToggle } from "./theme-toggle";
 
 const links = [
   { href: "/", label: "Home" },
+  { href: "/#about", label: "About" },
   { href: "/reports", label: "Reports" },
   { href: "/#projects", label: "Projects" },
-  { href: "/#about", label: "About" },
+  { href: "/#gallery", label: "Gallery" },
 ];
 
 export function SiteHeader() {
@@ -29,7 +30,7 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-2 md:order-3 md:ml-0">
           <ThemeToggle />
           <a
-            href="mailto:rizanoesvan@gmail.com"
+            href="#contact"
             className="flex min-h-11 items-center rounded-xl bg-accent px-4 font-mono text-[13px] font-medium text-on-accent transition-transform hover:-translate-y-0.5"
           >
             Say hi

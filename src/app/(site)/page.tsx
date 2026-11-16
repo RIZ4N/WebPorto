@@ -4,7 +4,7 @@ import { ReportRow } from "@/components/report-row";
 import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/components/section-heading";
 import { education, experience, projects, stack } from "@/lib/content";
-import { getReports, groupByCourse } from "@/lib/data";
+import { getGallery, getReports, groupByCourse } from "@/lib/data";
 import profile from "../../../public/images/profile.jpg";
 
 function Arrow() {
@@ -30,7 +30,7 @@ function step(i: number) {
 }
 
 export default async function Home() {
-  const reports = await getReports();
+  const [reports, gallery] = await Promise.all([getReports(), getGallery()]);
   const [featured, ...rest] = reports;
   const moreReports = rest.slice(0, 4);
   const numbers = [
@@ -117,13 +117,56 @@ export default async function Home() {
         </div>
       </div>
 
-      <section className="px-3 pt-16 sm:px-6 md:pt-24">
+      <section id="about" className="px-5 pt-16 sm:px-8 md:pt-24">
+        <Reveal className="mx-auto flex max-w-[1240px] flex-col gap-10">
+          <SectionHeading
+            number="01"
+            title="About"
+            description="Who's behind the reports."
+          />
+          <div className="flex flex-wrap gap-x-16 gap-y-12">
+            <div className="flex-[0_1_300px] px-2">
+              <Image
+                src={profile}
+                alt="Rizan standing in a garden"
+                placeholder="blur"
+                sizes="(min-width: 768px) 300px, 80vw"
+                className="aspect-[4/5] w-full -rotate-3 rounded-3xl border-2 border-ink object-cover object-[center_20%] transition-transform duration-500 hover:rotate-0"
+              />
+            </div>
+            <div className="flex min-w-0 flex-1 basis-[480px] flex-col gap-10">
+              <p className="max-w-[640px] text-xl leading-relaxed">
+                I&apos;m Rizan, an Informatics student at Universitas Andalas. I
+                built this site as a place to show my work, my experience, and
+                how I&apos;m progressing in design and web development.
+              </p>
+              <dl className="flex flex-wrap gap-x-14 gap-y-6">
+                {numbers.map((item) => (
+                  <div key={item.label} className="flex flex-col-reverse">
+                    <dt className="font-mono text-xs text-muted">
+                      {item.label}
+                    </dt>
+                    <dd className="display text-7xl text-accent">
+                      {item.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(min(260px,100%),1fr))] gap-x-12 gap-y-10">
+                <Timeline title="Education" items={education} />
+                <Timeline title="Experience" items={experience} />
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+      <section className="px-3 pt-20 sm:px-6 md:pt-28">
         {featured && (
           <Reveal>
             <div className="mx-auto flex max-w-[1240px] flex-col gap-10 overflow-hidden rounded-3xl bg-panel p-6 text-on-panel sm:p-12">
               <SectionHeading
                 tone="panel"
-                number="01"
+                number="02"
                 title="Latest report"
                 description="The newest write-up from the lab, with a few earlier ones underneath."
               />
@@ -182,7 +225,7 @@ export default async function Home() {
       <section id="projects" className="px-5 pt-20 sm:px-8 md:pt-28">
         <Reveal className="mx-auto flex max-w-[1240px] flex-col gap-10">
           <SectionHeading
-            number="02"
+            number="03"
             title="Projects"
             description="A few things I've made so far, from interface concepts to things that run."
           />
@@ -222,49 +265,43 @@ export default async function Home() {
         </Reveal>
       </section>
 
-      <section id="about" className="px-5 pt-20 pb-12 sm:px-8 md:pt-28 md:pb-20">
-        <Reveal className="mx-auto flex max-w-[1240px] flex-col gap-10">
-          <SectionHeading
-            number="03"
-            title="About"
-            description="Who's behind the reports."
-          />
-          <div className="flex flex-wrap gap-x-16 gap-y-12">
-            <div className="flex-[0_1_300px] px-2">
-              <Image
-                src={profile}
-                alt="Rizan standing in a garden"
-                placeholder="blur"
-                sizes="(min-width: 768px) 300px, 80vw"
-                className="aspect-[4/5] w-full -rotate-3 rounded-3xl border-2 border-ink object-cover object-[center_20%] transition-transform duration-500 hover:rotate-0"
-              />
-            </div>
-            <div className="flex min-w-0 flex-1 basis-[480px] flex-col gap-10">
-              <p className="max-w-[640px] text-xl leading-relaxed">
-                I&apos;m Rizan, an Informatics student at Universitas Andalas. I
-                built this site as a place to show my work, my experience, and
-                how I&apos;m progressing in design and web development.
-              </p>
-              <dl className="flex flex-wrap gap-x-14 gap-y-6">
-                {numbers.map((item) => (
-                  <div key={item.label} className="flex flex-col-reverse">
-                    <dt className="font-mono text-xs text-muted">
-                      {item.label}
-                    </dt>
-                    <dd className="display text-7xl text-accent">
-                      {item.value}
-                    </dd>
+      {gallery.length > 0 && (
+        <section id="gallery" className="px-5 pt-20 sm:px-8 md:pt-28">
+          <Reveal className="mx-auto flex max-w-[1240px] flex-col gap-12">
+            <SectionHeading
+              number="04"
+              title="Gallery"
+              description="Moments and things I like looking at."
+            />
+            <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(300px,100%),1fr))] gap-x-6 gap-y-10">
+              {gallery.map((photo, index) => (
+                <li
+                  key={photo.id}
+                  className={`flex flex-col gap-3 ${index % 3 === 1 ? "md:translate-y-8" : ""}`}
+                >
+                  <div
+                    className={`relative aspect-[4/3] overflow-hidden rounded-3xl border-2 border-ink bg-card transition-transform duration-500 hover:rotate-0 ${
+                      ["-rotate-2", "rotate-1", "-rotate-1"][index % 3]
+                    }`}
+                  >
+                    <Image
+                      src={photo.imageUrl}
+                      alt={photo.caption || "Gallery photo"}
+                      fill
+                      sizes="(min-width: 1024px) 400px, 90vw"
+                      className="object-cover"
+                    />
                   </div>
-                ))}
-              </dl>
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(min(260px,100%),1fr))] gap-x-12 gap-y-10">
-                <Timeline title="Education" items={education} />
-                <Timeline title="Experience" items={experience} />
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </section>
+                  {photo.caption && (
+                    <p className="px-1 font-mono text-xs text-muted">{photo.caption}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </section>
+      )}
+
     </>
   );
 }

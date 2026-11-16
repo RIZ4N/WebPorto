@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { refreshContent } from "@/app/actions";
 import { createClient } from "@/lib/supabase";
 import { slugify } from "@/lib/slug";
+import { uploadPicture } from "@/lib/upload";
 import { RichEditor } from "./rich-editor";
 import {
   errorMessage,
@@ -44,17 +45,6 @@ const emptyForm: Form = {
   status: "draft",
   publishedAt: null,
 };
-
-async function uploadPicture(file: File) {
-  const supabase = createClient();
-  const extension = file.name.split(".").pop()?.toLowerCase() || "png";
-  const path = `reports/${crypto.randomUUID()}.${extension}`;
-  const { error } = await supabase.storage
-    .from("media")
-    .upload(path, file, { contentType: file.type, cacheControl: "31536000" });
-  if (error) throw error;
-  return supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
-}
 
 export function ReportEditor() {
   const router = useRouter();
