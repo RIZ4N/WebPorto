@@ -98,7 +98,7 @@ export const experience = [
   {
     place: "Himpunan Mahasiswa Informatika",
     detail: "Staff, External Division",
-    period: "2025 to present",
+    period: "2025 to 2026",
   },
   {
     place: "FESTIKA 2025",
@@ -110,7 +110,7 @@ export const experience = [
 export const contact = {
   email: "rizanoesvan@gmail.com",
   // TODO(Rizan): replace with your LinkedIn profile address.
-  linkedin: "https://www.linkedin.com/",
+  linkedin: "https://www.linkedin.com/in/rizan-oesvan-9491b931b/",
   github: "https://github.com/RIZ4N",
   instagram: "https://www.instagram.com/rizanoesvan/",
 };
