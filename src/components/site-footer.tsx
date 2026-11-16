@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { contact } from "@/lib/content";
 import { ContactForm } from "./contact-form";
 
@@ -60,9 +61,25 @@ export function SiteFooter() {
           <ContactForm />
         </div>
       </div>
-      <p className="mx-auto max-w-[1240px] px-2 pt-5 font-mono text-xs text-muted">
-        © 2026 Rizan Oesvan Idrati · Informatics, Universitas Andalas
-      </p>
+      <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-4 px-2 pt-2">
+        <p className="font-mono text-xs text-muted">
+          © 2026 Rizan Oesvan Idrati · Informatics, Universitas Andalas
+        </p>
+        {/* Quiet way in for the site owner: looks like one of the diamond marks used elsewhere. */}
+        <Link
+          href="/admin"
+          aria-label="Admin sign in"
+          className="group flex min-h-11 min-w-11 items-center justify-end gap-2"
+        >
+          <span className="font-mono text-xs text-muted opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+            admin
+          </span>
+          <span
+            aria-hidden="true"
+            className="size-2 rotate-45 bg-line transition-[transform,background-color] duration-500 group-hover:rotate-[225deg] group-hover:scale-150 group-hover:bg-accent group-focus-visible:rotate-[225deg] group-focus-visible:scale-150 group-focus-visible:bg-accent"
+          />
+        </Link>
+      </div>
     </footer>
   );
 }
