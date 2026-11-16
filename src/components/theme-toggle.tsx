@@ -17,7 +17,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label="Switch between light and dark theme"
-      className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-accent hover:text-accent"
+      className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-line text-ink transition-colors hover:border-accent hover:text-accent"
     >
       <svg
         className="icon-moon"

@@ -2,50 +2,76 @@
 
 :root,
 [data-theme="light"] {
-  --ground: #faf8f3;
-  --surface: #f2eee4;
-  --ink: #1c2421;
-  --muted: #5c6661;
-  --line: #e4dfd3;
-  --accent: #2f6f68;
-  --accent-tint: #e3eeeb;
+  --ground: #f6f3ec;
+  --grid: rgb(20 25 23 / 0.05);
+  --card: #fffdf8;
+  --ink: #141917;
+  --muted: #57605c;
+  --line: #ddd7ca;
+  --accent: #0e7c6f;
   --on-accent: #ffffff;
+  --accent-tint: #dcede9;
+  /* Panels stay dark in both themes. */
+  --panel: #121816;
+  --panel-raised: #1b2321;
+  --on-panel: #efece4;
+  --panel-muted: #a3ada8;
+  --panel-line: #2c3633;
+  --panel-accent: #4fd1bd;
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --ground: #121816;
-  --surface: #1a2220;
-  --ink: #ece9e1;
+  --ground: #0e1312;
+  --grid: rgb(239 236 228 / 0.035);
+  --card: #161c1a;
+  --ink: #efece4;
   --muted: #a3ada8;
-  --line: #2a3431;
-  --accent: #7fc4ba;
-  --accent-tint: #1f302d;
-  --on-accent: #0f1513;
+  --line: #283230;
+  --accent: #4fd1bd;
+  --on-accent: #06201c;
+  --accent-tint: #17302c;
+  --panel: #1a2220;
+  --panel-raised: #222c29;
+  --on-panel: #efece4;
+  --panel-muted: #a3ada8;
+  --panel-line: #333e3b;
+  --panel-accent: #4fd1bd;
   color-scheme: dark;
 }
 
 @theme inline {
   --color-ground: var(--ground);
-  --color-surface: var(--surface);
+  --color-card: var(--card);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-accent: var(--accent);
-  --color-accent-tint: var(--accent-tint);
   --color-on-accent: var(--on-accent);
-  --font-serif: "Newsreader Variable", Georgia, "Times New Roman", serif;
+  --color-accent-tint: var(--accent-tint);
+  --color-panel: var(--panel);
+  --color-panel-raised: var(--panel-raised);
+  --color-on-panel: var(--on-panel);
+  --color-panel-muted: var(--panel-muted);
+  --color-panel-line: var(--panel-line);
+  --color-panel-accent: var(--panel-accent);
+  --font-display: "Archivo Variable", "Arial Narrow", Impact, sans-serif;
   --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 6rem;
+  scroll-padding-top: 7rem;
 }
 
 body {
-  background: var(--ground);
+  background-color: var(--ground);
+  /* Faint graph-paper grid behind everything. */
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 40px 40px;
   color: var(--ink);
   transition:
     background-color 0.25s ease,
@@ -62,6 +88,16 @@ body {
   outline-offset: 3px;
 }
 
+/* Condensed, heavy, uppercase: the voice of every heading. */
+.display {
+  font-family: var(--font-display);
+  font-stretch: 62%;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+  line-height: 0.92;
+}
+
 /* Theme toggle shows the icon for the theme you would switch to. */
 .icon-sun {
   display: none;
@@ -73,29 +109,60 @@ body {
   display: none;
 }
 
-/* One entrance sequence for the hero; everything else stays still. */
+/* Hero entrance. */
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(22px);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
-
 .rise {
   animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* Sections fade up as they scroll into view. Only hidden when JS is running. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Endless strip of the tools I work with. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .rise {
+  .rise,
+  .marquee-track {
     animation: none;
+  }
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
   * {
     transition-duration: 0.01ms !important;
