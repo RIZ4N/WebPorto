@@ -36,6 +36,9 @@ Open http://localhost:3000.
 6. Once: paste `supabase/add-gallery-and-messages.sql` into **SQL Editor** and
    run it. It adds the gallery and the contact-form inbox.
 
+7. Once: run `supabase/add-practicum-08.sql` to add Practicum 08 with its
+   chapters. Its pictures are in `public/images/legacy/MobApp/Praktikum8`.
+
 Only accounts listed in `admins` can change anything; visitors can only read
 published reports.
 
